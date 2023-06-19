@@ -21,7 +21,7 @@ import re
 import os
 
 bot = Client("bot",
-             bot_token= "5509916510:AAEBfGlNW7hW8a-5p9wcxG30ybsQkDfkqeg",
+             bot_token= "5509916510:AAFHwDD7kOSrTvvjwmCqDF6LU8ov2_hjR2E",
              api_id= 27495136,
              api_hash= "4ccc4865eec4d8fde7530e71948b3424")
 
@@ -40,6 +40,8 @@ async def restart_handler(_, m):
 async def upload(bot: Client, m: Message):
     editable = await m.reply_text('Send link in **Name&link** format to download the url')
     input9: Message = await bot.listen(editable.chat.id)
+    x = await input.download()
+    await input.delete(True)
     raw = input9.text
     name = raw.split('&')[0]
     url = raw.split('&')[1] or raw
@@ -52,7 +54,7 @@ async def upload(bot: Client, m: Message):
     
     cc = f'>> **Name :** {name}'
     
-    path = f"./downloads/"
+    path = f"./downloads/{m.chat.id}"
 
     if "youtu" in url:
         if raw_text2 in ["144", "240", "480"]:
