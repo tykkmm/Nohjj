@@ -40,8 +40,6 @@ async def restart_handler(_, m):
 async def upload(bot: Client, m: Message):
     editable = await m.reply_text('Send link in **Name&link** format to download the url')
     input9: Message = await bot.listen(editable.chat.id)
-    x = await input.download()
-    await input.delete(True)
     raw = input9.text
     name = raw.split('&')[0]
     url = raw.split('&')[1] or raw
