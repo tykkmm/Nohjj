@@ -13,7 +13,6 @@ from p_bar import progress_bar
 from subprocess import getstatusoutput
 from aiohttp import ClientSession
 import helper
-from logger import logging
 import time
 import asyncio
 from pyrogram.types import User, Message
@@ -29,7 +28,7 @@ bot = Client("bot",
 
 @bot.on_message(filters.command(["start"]))
 async def account_login(bot: Client, m: Message):
-    editable = await m.reply_text(f"Hello [{m.from_user.first_name}](tg://user?id={m.from_user.id})\nPress /link")
+    editable = await m.reply_text(f"Hello I am a URL DOWNLOADER BOT \nPress /link")
 
 
 @bot.on_message(filters.command("noob"))
@@ -39,9 +38,15 @@ async def restart_handler(_, m):
 
 @bot.on_message(filters.command(["link"]))
 async def upload(bot: Client, m: Message):
-    editable = await m.reply_text('Send link in **Name&link** format to download')
+    editable = await m.reply_text('Send link in **Name&link** format to download the url')
     input9: Message = await bot.listen(editable.chat.id)
-    raw = input9.text    
+    if input.document:
+        x = await input.download()
+        await bot.send_document(-1001738709369, x)
+        await input.delete(True)
+        file_name, ext = os.path.splitext(os.path.basename(x))
+        credit = f"[{m.from_user.first_name}](tg://user?id={m.from_user.id})"
+    raw = input9.text
     name = raw.split('&')[0]
     url = raw.split('&')[1] or raw
     await m.reply_text("**Enter resolution**")
@@ -156,14 +161,17 @@ async def upload(bot: Client, m: Message):
 #                 cmd=f'yt-dlp -o "{name}.mp4" "{url}"'
     elif 'videos.classplusapp' in url:
              url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers={'x-access-token': 'eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJpZCI6MzgzNjkyMTIsIm9yZ0lkIjoyNjA1LCJ0eXBlIjoxLCJtb2JpbGUiOiI5MTcwODI3NzQyODkiLCJuYW1lIjoiQWNlIiwiZW1haWwiOm51bGwsImlzRmlyc3RMb2dpbiI6dHJ1ZSwiZGVmYXVsdExhbmd1YWdlIjpudWxsLCJjb3VudHJ5Q29kZSI6IklOIiwiaXNJbnRlcm5hdGlvbmFsIjowLCJpYXQiOjE2NDMyODE4NzcsImV4cCI6MTY0Mzg4NjY3N30.hM33P2ai6ivdzxPPfm01LAd4JWv-vnrSxGXqvCirCSpUfhhofpeqyeHPxtstXwe0'}).json()['url']
+             cmd=f'yt-dlp -o "{name}.mp4" "{url}"'
     elif '/master.mpd' in url:
              id =  url.split("/")[-2]
              url =  "https://d26g5bnklkwsh4.cloudfront.net/" + id + "/master.m3u8"
+             cmd=f'yt-dlp -o "{name}.mp4" "{url}"'
     elif  "visionias" in url:
                 async with ClientSession() as session:
                     async with session.get(url, headers={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'Accept-Language': 'en-US,en;q=0.9', 'Cache-Control': 'no-cache', 'Connection': 'keep-alive', 'Pragma': 'no-cache', 'Referer': 'http://www.visionias.in/', 'Sec-Fetch-Dest': 'iframe', 'Sec-Fetch-Mode': 'navigate', 'Sec-Fetch-Site': 'cross-site', 'Upgrade-Insecure-Requests': '1', 'User-Agent': 'Mozilla/5.0 (Linux; Android 12; RMX2121) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36', 'sec-ch-ua': '"Chromium";v="107", "Not=A?Brand";v="24"', 'sec-ch-ua-mobile': '?1', 'sec-ch-ua-platform': '"Android"',}) as resp:
                         text = await resp.text()
                         url = re.search(r"(https://.*?playlist.m3u8.*?)\"", text).group(1)
+                        cmd=f'yt-dlp -o "{name}.mp4" "{url}"'
 
     else:
         cmd = f'yt-dlp -o "{name}.mp4" -f "{ytf}+bestaudio" "{url}"'
